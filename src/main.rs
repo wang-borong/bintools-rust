@@ -14,9 +14,6 @@ fn main() {
     let cmd_name = Path::new(&arg0).file_name().unwrap().to_str().unwrap();
     let oth_args = args.drain(1..).collect();
 
-    //fspreview::run("google_translate:127:    top.mainloop()", 20);
-    //shell::run("bat Cargo.toml");
-
     match cmd_name {
         "fs" => {
             fs::run(&oth_args);
