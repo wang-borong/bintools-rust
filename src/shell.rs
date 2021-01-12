@@ -6,12 +6,14 @@ pub struct ShellOut {
 }
 
 pub fn run(args_str: &str) {
-    let mut child = Command::new("bash")
+    Command::new("bash")
         .arg("-c")
         .arg(args_str)
         .spawn()
-        .unwrap();
-    child.wait().unwrap();
+        .unwrap()
+        .wait()
+        .unwrap()
+        .success();
 }
 
 pub fn run_with_out(args_str: &str) -> ShellOut {
