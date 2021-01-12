@@ -30,18 +30,39 @@ pub fn run(args: &Vec<String>) {
         exit(0);
     }
 
-    print!("there are {} diffs, use nvim to show them?", lines_len);
-    let ans = utils::get_user_input(" ");
-    for line in lines {
+    println!("there are {} diffs:", lines_len);
+
+    let mut i: usize = 0;
+    for line in &lines {
         let diffs = line
             .replace("Files ", "")
             .replace(" differ", "")
             .replace(" and ", " ");
-        if ans == "y" || ans == "n" {
-            let edit_diffs_cmd = format!("nvim -d {}", diffs);
-            shell::run(&edit_diffs_cmd);
-        } else {
-            println!("{}", diffs);
+        println!("[{:02}]: {}", i, diffs);
+        i += 1;
+    }
+
+    i = 0;
+    loop {
+        let sel = utils::get_user_input("input number to open: ");
+        let selno = sel.parse::<usize>();
+        match selno {
+            Ok(no) => {
+                if i == lines_len {
+                    break;
+                }
+                let line = String::from(lines[no]);
+                let diffs = line
+                    .replace("Files ", "")
+                    .replace(" differ", "")
+                    .replace(" and ", " ");
+                let edit_diffs_cmd = format!("nvim -d {}", diffs);
+                shell::run(&edit_diffs_cmd);
+                i += 1;
+            }
+            Err(_) => {
+                exit(3);
+            }
         }
     }
 }
