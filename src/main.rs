@@ -3,10 +3,12 @@ use std::path::Path;
 
 mod shell;
 mod sha;
+mod utils;
 mod fs;
 mod fspreview;
 mod ff;
 mod arg;
+mod vd;
 
 fn main() {
     let mut args: Vec<String> = env::args().collect();
@@ -15,18 +17,11 @@ fn main() {
     let oth_args = args.drain(1..).collect();
 
     match cmd_name {
-        "fs" => {
-            fs::run(&oth_args);
-        },
-        "fspreview" => {
-            fspreview::run(&oth_args);
-        },
-        "ff" => {
-            ff::run(&oth_args);
-        },
-        "ag" | "rg" => {
-            arg::run(&arg0, &oth_args);
-        },
+        "fs" => fs::run(&oth_args),
+        "fspreview" => fspreview::run(&oth_args),
+        "ff" => ff::run(&oth_args),
+        "ag" | "rg" => arg::run(&arg0, &oth_args),
+        "vd" => vd::run(&oth_args),
         _ => {
             eprintln!("uncovered command");
         }
