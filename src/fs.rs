@@ -5,7 +5,7 @@ use crate::shell;
 
 pub fn run(args: &Vec<String>) {
     if args.len() < 1 {
-        println!("Usage: fs <search patterns>");
+        eprintln!("Usage: fs <search patterns>");
         exit(1);
     }
 

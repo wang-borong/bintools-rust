@@ -3,7 +3,7 @@ use crate::shell;
 
 pub fn run(args: &Vec<String>) {
     if args.len() < 1 {
-        println!("Usage: ff <file name pattern>");
+        eprintln!("Usage: ff <file name pattern>");
         exit(1);
     }
 

@@ -3,7 +3,7 @@ use crate::shell;
 
 pub fn run(args: &Vec<String>) {
     if args.len() < 1 {
-        println!("Usage: fspreview <rgout> <termnal hight>");
+        eprintln!("Usage: fspreview <rgout> <termnal hight>");
         exit(1);
     }
 

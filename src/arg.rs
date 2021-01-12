@@ -18,7 +18,7 @@ fn get_ignore_path(p: &str) -> PathBuf {
 
 pub fn run(arg0: &str, args: &Vec<String>) {
     if args.len() < 1 {
-        println!("[wraped ag|rg] Usage: ag|rg <search pattern>");
+        eprintln!("[wraped ag|rg] Usage: ag|rg <search pattern>");
         exit(1);
     }
 
