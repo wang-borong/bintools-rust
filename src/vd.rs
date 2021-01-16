@@ -16,7 +16,10 @@ pub fn run(args: &Vec<String>) {
     }
 
     let args_str = &args.join(" ");
-    let mut diff_cmd = String::from("diff -Nr -q -X ~/Workspace/tools/cgminer.dontdiff ");
+    let mut diff_cmd = String::from("diff -Nr -q ");
+    if Path::new("~/Workspace/tools/cgminer.dontdiff").exists() {
+        diff_cmd.push_str("-X ~/Workspace/tools/cgminer.dontdiff ");
+    }
     diff_cmd.push_str(args_str);
 
     let output = shell::run_with_out(&diff_cmd);
