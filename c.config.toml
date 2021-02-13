@@ -1,0 +1,11 @@
+[bare]
+commands = ["gcc -Wall -Og -g3 -pthread"]
+
+[make]
+commands = ["make -j4"]
+
+[autotool]
+commands = ["autoreconf -fvi", "./configure --prefix=/opt/$PACKAGE", "make -j4"]
+
+[cmake]
+commands = ["mkdir build", "cd build", "cmake ..", "make -j4"]

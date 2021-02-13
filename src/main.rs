@@ -9,6 +9,7 @@ mod fspreview;
 mod ff;
 mod arg;
 mod vd;
+mod c;
 
 fn main() {
     let mut args: Vec<String> = env::args().collect();
@@ -22,6 +23,7 @@ fn main() {
         "ff" => ff::run(&oth_args),
         "ag" | "rg" => arg::run(&arg0, &oth_args),
         "vd" => vd::run(&oth_args),
+        "c" => c::run(&oth_args),
         _ => {
             eprintln!("uncovered command");
         }

@@ -1,4 +1,8 @@
 use std::io::{stdin,stdout,Write};
+use std::fs;
+use sha2::{Sha256, Digest};
+use hex;
+
 
 pub fn get_user_input(prompt: &str) -> String {
     print!("{}", prompt);
@@ -13,4 +17,13 @@ pub fn get_user_input(prompt: &str) -> String {
         s.pop();
     }
     s
+}
+
+pub fn get_file_sha256(filename: &str) -> String {
+    let cont = fs::read(filename).expect(&format!("Read {} failed!", filename));
+
+    let mut hasher = Sha256::new();
+    hasher.update(cont);
+    let digest = hasher.finalize();
+    hex::encode(&digest)
 }

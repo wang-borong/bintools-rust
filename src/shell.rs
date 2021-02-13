@@ -5,6 +5,21 @@ pub struct ShellOut {
     pub stderr: String,
 }
 
+impl ShellOut {
+    pub fn display_out_err(&self) {
+        print!("{}", self.stdout);
+        eprint!("{}", self.stderr);
+    }
+
+    pub fn _display_out(&self) {
+        print!("{}", self.stdout);
+    }
+
+    pub fn _display_err(&self) {
+        eprint!("{}", self.stderr);
+    }
+}
+
 pub fn run(args_str: &str) {
     Command::new("bash")
         .arg("-c")
