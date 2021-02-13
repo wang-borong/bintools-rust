@@ -1,6 +1,7 @@
 use std::process::{Command, Stdio};
 
 pub struct ShellOut {
+    pub exitcode: Option<i32>,
     pub stdout: String,
     pub stderr: String,
 }
@@ -41,6 +42,7 @@ pub fn run_with_out(args_str: &str) -> ShellOut {
     let output = child.wait_with_output().unwrap();
 
     ShellOut {
+        exitcode: output.status.code(),
         stdout: String::from_utf8(output.stdout).unwrap(),
         stderr: String::from_utf8(output.stderr).unwrap(),
     }

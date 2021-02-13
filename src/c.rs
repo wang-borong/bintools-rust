@@ -121,7 +121,6 @@ impl Crun {
                         // compile file with gcc command
                         let compcmd = String::from(&self.conf.bare.commands[0]);
                         let compcmd = compcmd + " " + &self.projfile + " -o " + &elf.to_str().unwrap();
-                        println!("compcmd: {}", compcmd);
                         shell::run(&compcmd);
                     }
                 },
@@ -151,10 +150,13 @@ impl Crun {
         match self.ctype.unwrap() {
             Ctype::Bare => {
                 let elf = PathBuf::from(&self.outdir).join(&self.outelf);
-                println!("Exec {}", elf.display());
                 if Path::new(&elf).exists() {
                     let shout = shell::run_with_out(&elf.to_str().unwrap());
                     shout.display_out_err();
+                    match shout.exitcode {
+                        Some(ec) => process::exit(ec),
+                        None => eprintln!("Terminated by signal"),
+                    }
                 } else {
                     eprintln!("No compiled elf to execute!");
                 }
@@ -173,7 +175,6 @@ pub fn run(args: &Vec<String>) {
     } else {
         projfile = &args[0];
     }
-    println!("projfile is {}", &args[0]);
 
     let confname = PathBuf::from(env::var("HOME").unwrap()).join(".config/c.config.toml");
     let crun = Crun::new(projfile, &confname.as_path().to_str().unwrap());
