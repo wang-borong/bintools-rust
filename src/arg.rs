@@ -25,19 +25,30 @@ pub fn run(arg0: &str, args: &Vec<String>) {
     let cwd = env::current_dir().unwrap();
     let cwd_str = String::from(cwd.to_str().unwrap());
     let ignfpath = get_ignore_path(&cwd_str);
-    let args_str = args.join(" ");
-    let mut arg_cmd = String::from("/usr/bin/") + arg0 + " ";
+
+    let mut opts: Vec<&str> = Vec::new();
+    let mut sstr: Vec<&str> = Vec::new();
+    for a in args {
+        if a.chars().nth(0).unwrap() == '-' {
+            opts.push(&a);
+        } else {
+            sstr.push(&a);
+        }
+    }
+    let args_opts = opts.join(" ");
+    let args_str = sstr.join(" ");
+    let mut arg_cmd = String::from("/usr/bin/") + arg0;
     if ignfpath.as_path().exists() {
         if arg0 == "ag" {
-            arg_cmd += &format!("-p {} ", ignfpath.to_str().unwrap());
+            arg_cmd += &format!(" -p {} ", ignfpath.to_str().unwrap());
         } else if arg0 == "rg" {
-            arg_cmd += &format!("--ignore-file {} ", ignfpath.to_str().unwrap());
+            arg_cmd += &format!(" --ignore-file {} ", ignfpath.to_str().unwrap());
         } else {
             eprintln!("Error: not ag or rg command!");
             exit(2);
         }
     }
-    arg_cmd += &args_str;
+    arg_cmd = format!(r#"{} {} "{}""#, arg_cmd, args_opts, args_str);
 
     shell::run(&arg_cmd);
 }
