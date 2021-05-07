@@ -18,6 +18,9 @@ fn main() {
     let oth_args = args.drain(1..).collect();
 
     match cmd_name {
+        "bintools" => {
+            eprintln!("make symlink to use it");
+        },
         "fs" => fs::run(&oth_args),
         "fspreview" => fspreview::run(&oth_args),
         "ff" => ff::run(&oth_args),
