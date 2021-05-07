@@ -1,5 +1,6 @@
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::exit;
+use std::env;
 
 use crate::shell;
 use crate::utils;
@@ -7,6 +8,7 @@ use crate::utils;
 pub fn run(args: &Vec<String>) {
     if args.len() != 2 {
         eprintln!("Usage: vd <diff path1> <diff path2>");
+        eprintln!("Note: users can use ~/.cache/vd.dontdiff to exclude diff files");
         exit(1);
     }
 
@@ -17,8 +19,14 @@ pub fn run(args: &Vec<String>) {
 
     let args_str = &args.join(" ");
     let mut diff_cmd = String::from("diff -Nr -q ");
-    if Path::new("~/Workspace/tools/cgminer.dontdiff").exists() {
-        diff_cmd.push_str("-X ~/Workspace/tools/cgminer.dontdiff ");
+
+    let home = env::var("HOME").unwrap();
+    let mut ignore_paths: Vec<PathBuf> = Vec::new();
+    ignore_paths.push(Path::new(&home).join(".cache/vd.dontdiff"));
+    for igp in ignore_paths {
+        if igp.exists() {
+            diff_cmd.push_str(&format!("-X {} ", igp.display()));
+        }
     }
     diff_cmd.push_str(args_str);
 
