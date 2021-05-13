@@ -12,6 +12,8 @@ mod rgignore;
 mod vd;
 mod c;
 
+const VERSION: &str = env!("CARGO_PKG_VERSION");
+
 fn main() {
     let mut args: Vec<String> = env::args().collect();
     let arg0 = String::from(&args[0]);
@@ -20,7 +22,16 @@ fn main() {
 
     match cmd_name {
         "bintools" => {
-            eprintln!("make symlink to use it");
+            eprintln!("bintools {}, whose usage just like busybox!\n", VERSION);
+            eprintln!("symlink tools:");
+            eprintln!(" * fs - wrapper of rg to search patterns with fzf");
+            eprintln!(" * fspreview - fs previewer");
+            eprintln!(" * ff - find file with fzf");
+            eprintln!(" * rg|ag - wrapper of rg or ag");
+            eprintln!(" * rgignore - tool to add ignore patterns for rg or ag");
+            eprintln!(" * vd - tool to view differents between two directories");
+            eprintln!(" * c - compile and run c code file");
+            eprintln!("\nusage: ln -s bintools [fs|...]")
         },
         "fs" => fs::run(&oth_args),
         "fspreview" => fspreview::run(&oth_args),
@@ -30,7 +41,7 @@ fn main() {
         "vd" => vd::run(&oth_args),
         "c" => c::run(&oth_args),
         _ => {
-            eprintln!("uncovered command");
+            eprintln!("unimplemented command {}", cmd_name);
         }
     }
 }
