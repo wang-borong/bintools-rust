@@ -24,6 +24,7 @@ fn add_ignore(p: &PathBuf, args: &Vec<String>) {
                 .open(p)
                 .unwrap();
     let ignores = args.join("\n");
+    let ignores = ignores + "\n";
 
     file.write_all(ignores.as_bytes())
                 .expect("write ignore patterns failed!");
