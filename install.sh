@@ -17,6 +17,7 @@ cp target/release/bintools $1
 cd $1
 ln -sf bintools ag
 ln -sf bintools rg
+ln -sf bintools rgignore
 ln -sf bintools fs
 ln -sf bintools ff
 ln -sf bintools vd
