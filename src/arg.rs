@@ -5,7 +5,7 @@ use std::path::Path;
 use crate::shell;
 use crate::rgignore::get_ignore_path;
 
-pub fn run(arg0: &str, args: &Vec<String>) {
+pub fn run(cmd_name: &str, args: &Vec<String>) {
     if args.len() < 1 {
         eprintln!("[wraped ag|rg] Usage: ag|rg <search pattern>");
         exit(1);
@@ -39,25 +39,22 @@ pub fn run(arg0: &str, args: &Vec<String>) {
 
     let mut arg_cmd = String::new();
     for p in arg_path_env.iter() {
-        let tmp_cmd = Path::new(arg0)
-            .file_name().unwrap()
-            .to_str().unwrap();
-        arg_cmd = format!("{}/{}", p, tmp_cmd);
+        arg_cmd = format!("{}/{}", p, cmd_name);
         if Path::new(&arg_cmd).exists() {
             break;
         }
     }
     if !Path::new(&arg_cmd).exists() {
         eprintln!("no {} in {}, {} or {}",
-            arg0, arg_path_env[0], arg_path_env[1], arg_path_env[2]);
+            cmd_name, arg_path_env[0], arg_path_env[1], arg_path_env[2]);
         exit(1);
     }
 
     if ignfpath.as_path().exists() {
-        if arg0 == "ag" {
+        if cmd_name == "ag" {
             arg_cmd += &format!(" -p {} ",
                 ignfpath.to_str().unwrap());
-        } else if arg0 == "rg" {
+        } else if cmd_name == "rg" {
             arg_cmd += &format!(" --ignore-file {} ",
                 ignfpath.to_str().unwrap());
         } else {
