@@ -25,7 +25,7 @@ pub fn run(args: &Vec<String>) {
         }
     }
 
-    if Path::new(sstrs.last().unwrap()).is_dir() {
+    if sstrs.len() > 1 && Path::new(sstrs.last().unwrap()).is_dir() {
         sdir = sstrs.pop().unwrap();
     }
 
