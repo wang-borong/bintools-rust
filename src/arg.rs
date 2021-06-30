@@ -4,10 +4,31 @@ use std::path::Path;
 
 use crate::shell;
 use crate::rgignore::get_ignore_path;
+use crate::utils;
 
-pub fn run(cmd_name: &str, args: &Vec<String>) {
+pub fn run(cmd_path: &str, cmd_name: &str, args: &Vec<String>) {
     if args.len() < 1 {
         eprintln!("[wraped ag|rg] Usage: ag|rg <search pattern>");
+        exit(1);
+    }
+
+    // We will wrap the command which will be put in a user specified path,
+    // and all command absolute paths can be search by whereis command.
+    // So that we should strip the wrapped command path and get the first
+    // unwrapped command path to use the command.
+    let arg_paths = utils::cmd_path(cmd_name);
+    let mut arg_cmd = String::new();
+    for path in arg_paths {
+        if path != String::from(cmd_path) {
+            // get the first unwrapped command path
+            arg_cmd = path;
+            break;
+        }
+    }
+
+    // We can not get a unwrapped command path
+    if arg_cmd.len() == 0 {
+        eprintln!("no {} in your path", cmd_name);
         exit(1);
     }
 
@@ -32,23 +53,6 @@ pub fn run(cmd_name: &str, args: &Vec<String>) {
 
     let args_opts = opts.join(" ");
     let args_str = sstr.join(" ");
-    let mut arg_path_env: [&str; 3] = ["/usr/bin", "/usr/local/bin", ""];
-    let home = env::var("HOME").unwrap();
-    let home_path = home + "/.local/bin";
-    arg_path_env[2] = &home_path;
-
-    let mut arg_cmd = String::new();
-    for p in arg_path_env.iter() {
-        arg_cmd = format!("{}/{}", p, cmd_name);
-        if Path::new(&arg_cmd).exists() {
-            break;
-        }
-    }
-    if !Path::new(&arg_cmd).exists() {
-        eprintln!("no {} in {}, {} or {}",
-            cmd_name, arg_path_env[0], arg_path_env[1], arg_path_env[2]);
-        exit(1);
-    }
 
     if ignfpath.as_path().exists() {
         if cmd_name == "ag" {

@@ -3,10 +3,17 @@ use std::path::Path;
 use term_size;
 
 use crate::shell;
+use crate::utils;
 
 pub fn run(args: &Vec<String>) {
     if args.len() < 1 {
         eprintln!("Usage: fs [options] <search patterns>");
+        exit(1);
+    }
+
+    if !utils::cmd_exist("rg")
+        || !utils::cmd_exist("fzf") {
+        eprintln!("no rg or fzf in your path");
         exit(1);
     }
 

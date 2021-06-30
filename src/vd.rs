@@ -17,6 +17,11 @@ pub fn run(args: &Vec<String>) {
         exit(2);
     }
 
+    if !utils::cmd_exist("nvim") {
+        eprintln!("no nvim in your path");
+        exit(1);
+    }
+
     let args_str = &args.join(" ");
     let mut diff_cmd = String::from("diff -Nr -q ");
 

@@ -1,5 +1,6 @@
 use std::process::exit;
 use crate::shell;
+use crate::utils;
 
 pub fn run(args: &Vec<String>) {
     if args.len() < 1 {
@@ -12,12 +13,18 @@ pub fn run(args: &Vec<String>) {
     let rgarr: Vec<&str> = rgout.splitn(3, ":").collect();
     let filname = rgarr[0];
     let linum = rgarr[1].parse::<i32>().unwrap();
-    let half_termh = termh / 2;
+    let half_termh = termh * 3 / 4;
     let mut startline = 0;
     if linum > half_termh {
         startline = linum - half_termh;
     }
-    let batcmd = format!("bat -n --color=always -H {} -r {}: {}", linum, startline, filname);
 
-    shell::run(&batcmd);
+    let view_cmd: String;
+    if utils::cmd_exist("bat") {
+        view_cmd = format!("bat -n --color=always -H {} -r {}: {}", linum, startline, filname);
+    } else {
+        view_cmd = format!("cat {}", filname);
+    }
+
+    shell::run(&view_cmd);
 }

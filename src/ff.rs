@@ -1,9 +1,17 @@
 use std::process::exit;
 use crate::shell;
+use crate::utils;
 
 pub fn run(args: &Vec<String>) {
     if args.len() < 1 {
         eprintln!("Usage: ff <file name pattern>");
+        exit(1);
+    }
+
+    if !utils::cmd_exist("fd")
+        || !utils::cmd_exist("fzf")
+        || !utils::cmd_exist("nvim") {
+        eprintln!("no fd, fzf or neovim in your path");
         exit(1);
     }
 
