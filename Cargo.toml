@@ -1,6 +1,6 @@
 [package]
 name = "bintools"
-version = "0.6.0"
+version = "0.6.1"
 authors = ["Jason Wang <12841205+bestwbr@users.noreply.github.com>"]
 edition = "2018"
 

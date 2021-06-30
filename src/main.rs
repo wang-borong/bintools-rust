@@ -36,7 +36,7 @@ fn main() {
         "fs" => fs::run(&oth_args),
         "fspreview" => fspreview::run(&oth_args),
         "ff" => ff::run(&oth_args),
-        "ag" | "rg" => arg::run(&arg0, &cmd_name, &oth_args),
+        "ag" | "rg" => arg::run(&cmd_name, &oth_args),
         "rgignore" => rgignore::run(&oth_args),
         "vd" => vd::run(&oth_args),
         "c" => c::run(&oth_args),

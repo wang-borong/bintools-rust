@@ -6,31 +6,25 @@ use crate::shell;
 use crate::rgignore::get_ignore_path;
 use crate::utils;
 
-pub fn run(cmd_path: &str, cmd_name: &str, args: &Vec<String>) {
+pub fn run(cmd_name: &str, args: &Vec<String>) {
     if args.len() < 1 {
         eprintln!("[wraped ag|rg] Usage: ag|rg <search pattern>");
         exit(1);
     }
 
     // We will wrap the command which will be put in a user specified path,
-    // and all command absolute paths can be search by whereis command.
-    // So that we should strip the wrapped command path and get the first
-    // unwrapped command path to use the command.
+    // and the wrapped command path is always the first entry in all obtained
+    // paths. So that we can just get the unwrapped command path from the
+    // second entry of paths.
     let arg_paths = utils::cmd_path(cmd_name);
-    let mut arg_cmd = String::new();
-    for path in arg_paths {
-        if path != String::from(cmd_path) {
-            // get the first unwrapped command path
-            arg_cmd = path;
-            break;
-        }
-    }
 
     // We can not get a unwrapped command path
-    if arg_cmd.len() == 0 {
-        eprintln!("no {} in your path", cmd_name);
+    if arg_paths.len() < 2 {
+        eprintln!("no unwrapped {} in your path", cmd_name);
         exit(1);
     }
+
+    let mut arg_cmd = arg_paths[1].clone();
 
     let cwd = env::current_dir().unwrap();
     let cwd_str = String::from(cwd.to_str().unwrap());
