@@ -18,7 +18,11 @@ fn main() {
     let mut args: Vec<String> = env::args().collect();
     let arg0 = String::from(&args[0]);
     let cmd_name = Path::new(&arg0).file_name().unwrap().to_str().unwrap();
+    let mut cmd_path = env::current_exe().unwrap();
     let oth_args = args.drain(1..).collect();
+
+    // get dirname
+    cmd_path.pop();
 
     match cmd_name {
         "bintools" => {
@@ -36,7 +40,7 @@ fn main() {
         "fs" => fs::run(&oth_args),
         "fspreview" => fspreview::run(&oth_args),
         "ff" => ff::run(&oth_args),
-        "ag" | "rg" => arg::run(&cmd_name, &oth_args),
+        "ag" | "rg" => arg::run(&cmd_name, &cmd_path.to_str().unwrap(), &oth_args),
         "rgignore" => rgignore::run(&oth_args),
         "vd" => vd::run(&oth_args),
         "c" => c::run(&oth_args),

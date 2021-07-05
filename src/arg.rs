@@ -6,7 +6,7 @@ use crate::shell;
 use crate::rgignore::get_ignore_path;
 use crate::utils;
 
-pub fn run(cmd_name: &str, args: &Vec<String>) {
+pub fn run(cmd_name: &str, cmd_path: &str, args: &Vec<String>) {
     if args.len() < 1 {
         eprintln!("[wraped ag|rg] Usage: ag|rg <search pattern>");
         exit(1);
@@ -24,10 +24,17 @@ pub fn run(cmd_name: &str, args: &Vec<String>) {
         exit(1);
     }
 
-    let mut arg_cmd = arg_paths[1].clone();
+    // get first unwrapped command (full path)
+    let mut arg_cmd = String::new();
+    for ap in arg_paths {
+        if !ap.contains(cmd_path) {
+            arg_cmd = ap;
+            break;
+        }
+    }
 
     let cwd = env::current_dir().unwrap();
-    let cwd_str = String::from(cwd.to_str().unwrap());
+    let cwd_str = cwd.to_str().unwrap();
     let ignfpath = get_ignore_path(&cwd_str);
 
     let mut opts: Vec<&str> = Vec::new();
