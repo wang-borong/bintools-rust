@@ -12,19 +12,15 @@ pub fn run(cmd_name: &str, cmd_path: &str, args: &Vec<String>) {
         exit(1);
     }
 
-    // We will wrap the command which will be put in a user specified path,
-    // and the wrapped command path is always the first entry in all obtained
-    // paths. So that we can just get the unwrapped command path from the
-    // second entry of paths.
     let arg_paths = utils::cmd_path(cmd_name);
 
-    // We can not get a unwrapped command path
+    // Exit if we can not get an unwrapped command path.
     if arg_paths.len() < 2 {
         eprintln!("no unwrapped {} in your path", cmd_name);
         exit(1);
     }
 
-    // get first unwrapped command (full path)
+    // get the first unwrapped command (full path)
     let mut arg_cmd = String::new();
     for ap in arg_paths {
         if !ap.contains(cmd_path) {
@@ -35,7 +31,7 @@ pub fn run(cmd_name: &str, cmd_path: &str, args: &Vec<String>) {
 
     let cwd = env::current_dir().unwrap();
     let cwd_str = cwd.to_str().unwrap();
-    let ignfpath = get_ignore_path(&cwd_str);
+    let ignpath = get_ignore_path(&cwd_str);
 
     let mut opts: Vec<&str> = Vec::new();
     let mut sstr: Vec<&str> = Vec::new();
@@ -55,13 +51,13 @@ pub fn run(cmd_name: &str, cmd_path: &str, args: &Vec<String>) {
     let args_opts = opts.join(" ");
     let args_str = sstr.join(" ");
 
-    if ignfpath.as_path().exists() {
+    if ignpath.as_path().exists() {
         if cmd_name == "ag" {
             arg_cmd += &format!(" -p {} ",
-                ignfpath.to_str().unwrap());
+                ignpath.to_str().unwrap());
         } else if cmd_name == "rg" {
             arg_cmd += &format!(" --ignore-file {} ",
-                ignfpath.to_str().unwrap());
+                ignpath.to_str().unwrap());
         } else {
             eprintln!("Error: not ag or rg command!");
             exit(2);
