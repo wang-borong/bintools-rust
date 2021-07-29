@@ -32,6 +32,12 @@ pub fn run(args: &Vec<String>) {
         }
     }
 
+    if sstrs.len() < 1 {
+        eprintln!("No search string specified!");
+        eprintln!("Usage: fs [options] <search patterns>");
+        exit(1);
+    }
+
     if sstrs.len() > 1 && Path::new(sstrs.last().unwrap()).exists() {
         spath = sstrs.pop().unwrap();
     }
