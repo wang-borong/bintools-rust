@@ -22,7 +22,7 @@ pub fn run(args: &Vec<String>) {
     // Try to split search strings and options
     let mut sstrs: Vec<&str> = Vec::new();
     let mut opts: Vec<&str> = Vec::new();
-    let mut sdir: &str = "";
+    let mut spath: &str = "";
 
     for s in args {
         if '-' as u8 != s.as_bytes()[0] {
@@ -32,14 +32,14 @@ pub fn run(args: &Vec<String>) {
         }
     }
 
-    if sstrs.len() > 1 && Path::new(sstrs.last().unwrap()).is_dir() {
-        sdir = sstrs.pop().unwrap();
+    if sstrs.len() > 1 && Path::new(sstrs.last().unwrap()).exists() {
+        spath = sstrs.pop().unwrap();
     }
 
     let sstr = sstrs.join(" ");
     let opt = opts.join(" ");
-    let file_pos_cmd = format!(r#"rg --color=always -n {} "{}" {} | fzf --ansi -e --tac -0 -1 --cycle --min-height=20 -d ':' --preview="echo '\033[1;32m  {{1}}\033[0m'; fspreview {{}} {}" --preview-window=right:60% | gawk -F':' '{{printf "%s +%s", $1, $2}}'"#,
-        opt, sstr, sdir, h);
+    let file_pos_cmd = format!(r#"rg --with-filename --color=always -n {} "{}" {} | fzf --ansi -e --tac -0 -1 --cycle --min-height=20 -d ':' --preview="echo '\033[1;32m  {{1}}\033[0m'; fspreview {{}} {}" --preview-window=right:60% | gawk -F':' '{{printf "%s +%s", $1, $2}}'"#,
+        opt, sstr, spath, h);
     let file_pos_out = shell::run_with_out(&file_pos_cmd);
     if file_pos_out.stdout != "" {
         let edit_file_cmd = "nvim ".to_owned() + &file_pos_out.stdout;

@@ -13,15 +13,19 @@ pub fn run(args: &Vec<String>) {
     let rgarr: Vec<&str> = rgout.splitn(3, ":").collect();
     let filname = rgarr[0];
     let linum = rgarr[1].parse::<i32>().unwrap();
-    let half_termh = termh * 3 / 4;
-    let mut startline = 0;
-    if linum > half_termh {
-        startline = linum - half_termh;
+    let rem_termh = termh * 3 / 4;
+    let startline;
+    let stopline;
+    if linum > rem_termh {
+        startline = linum - rem_termh;
+    } else {
+        startline = 0;
     }
+    stopline = startline + termh * 3;
 
     let view_cmd: String;
     if utils::cmd_exist("bat") {
-        view_cmd = format!("bat -n --color=always -H {} -r {}: {}", linum, startline, filname);
+        view_cmd = format!("bat -n --color=always -H {} -r {}:{} {}", linum, startline, stopline, filname);
     } else {
         view_cmd = format!("cat {}", filname);
     }

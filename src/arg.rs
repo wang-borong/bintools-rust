@@ -39,7 +39,7 @@ pub fn run(cmd_name: &str, cmd_path: &str, args: &Vec<String>) {
 
     let mut opts: Vec<&str> = Vec::new();
     let mut sstr: Vec<&str> = Vec::new();
-    let mut sdir: &str = "";
+    let mut spath: &str = "";
     for a in args {
         if a.chars().nth(0).unwrap() == '-' {
             opts.push(&a);
@@ -48,8 +48,8 @@ pub fn run(cmd_name: &str, cmd_path: &str, args: &Vec<String>) {
         }
     }
 
-    if sstr.len() > 1 && Path::new(sstr.last().unwrap()).is_dir() {
-        sdir = sstr.pop().unwrap();
+    if sstr.len() > 1 && Path::new(sstr.last().unwrap()).exists() {
+        spath = sstr.pop().unwrap();
     }
 
     let args_opts = opts.join(" ");
@@ -68,7 +68,7 @@ pub fn run(cmd_name: &str, cmd_path: &str, args: &Vec<String>) {
         }
     }
     arg_cmd = format!(r#"{} {} "{}" {}"#,
-        arg_cmd, args_opts, args_str, sdir);
+        arg_cmd, args_opts, args_str, spath);
 
     shell::run(&arg_cmd);
 }
